@@ -1,3 +1,3 @@
 resource "aws_ecs_cluster" "default" {
-  name = "${var.project}"
+  name = "${var.cluster_name}"
 }
