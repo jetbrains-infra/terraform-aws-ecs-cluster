@@ -31,3 +31,9 @@ module "example_ecs_cluster" {
 ```
 
 ## Outputs
+
+* `name` - cluster name
+* `ecs_service_role_name` - ECS service role name
+* `cluster_id` - cluster id
+* `security_group` - security group id
+* `iam_instance_profile_arn` - IAM instance profile ARN
