@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "default" {
-  name = "${var.cluster_name}"
+  name = "${local.name}"
 
   tags {
     Project = "${local.project}"
