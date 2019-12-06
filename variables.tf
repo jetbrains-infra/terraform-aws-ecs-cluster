@@ -11,12 +11,12 @@ variable "vpc_id" {
 }
 
 variable "trusted_cidr_blocks" {
-  type    = "list"
+  type    = list(string)
   default = [""]
 }
 
 locals {
-  vpc_id  = "${var.vpc_id}"
-  project = "${var.project}"
-  name    = "${replace(var.cluster_name, " ", "_")}"
+  vpc_id  = var.vpc_id
+  project = var.project
+  name    = replace(var.cluster_name, " ", "_")
 }
