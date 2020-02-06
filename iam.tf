@@ -55,7 +55,6 @@ resource "aws_iam_role_policy_attachment" "service_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceRole"
 }
 
-//
 data "aws_iam_policy_document" "ecs_task_role_policy" {
   statement {
     actions = ["sts:AssumeRole"]
