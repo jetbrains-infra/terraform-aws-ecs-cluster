@@ -18,6 +18,10 @@ output "iam_instance_profile_arn" {
   value = "${aws_iam_instance_profile.ecs_node.arn}"
 }
 
+output "iam_instance_profile_name" {
+  value = "${aws_iam_instance_profile.ecs_node.name}"
+}
+
 output "security_group_id" {
   value = "${aws_security_group.ecs_nodes.id}"
 }
