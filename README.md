@@ -26,4 +26,7 @@ module "example_ecs_cluster" {
 * `ecs_service_role_name` - ECS service role name
 * `ecs_default_task_role_name` - ECS default task role name
 * `iam_instance_profile_arn` - IAM instance profile ARN
+* `iam_instance_profile_name` -  IAM instance profile name
+* `iam_instance_role_name` - IAM instance role name
 * `security_group_id` - security group id
+* `security_group_name` - security group name

@@ -29,3 +29,7 @@ output "security_group_id" {
 output "security_group_name" {
   value = aws_security_group.ecs_nodes.name
 }
+
+output "iam_instance_role_name" {
+  value = aws_iam_role.ec2_instance_role.name
+}
