@@ -25,7 +25,7 @@ locals {
   capacity_providers  = var.capacity_providers
   trusted_cidr_blocks = var.trusted_cidr_blocks
   tags = merge({
-    "Name"   = local.name,
-    "Module" = "ECS Cluster"
-  }, local.tags)
+    Name   = var.cluster_name,
+    Module = "ECS Cluster"
+  }, var.tags)
 }
