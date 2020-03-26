@@ -14,6 +14,11 @@ variable "trusted_cidr_blocks" {
   type    = list(string)
   default = [""]
 }
+variable "capacity_providers" {
+  description = "Amazon ECS cluster capacity providers determine the infrastructure to use for your tasks."
+  type        = list(string)
+  default     = ["FARGATE", "FARGATE_SPOT"]
+}
 
 locals {
   vpc_id              = var.vpc_id

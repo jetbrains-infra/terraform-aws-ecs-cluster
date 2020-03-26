@@ -1,4 +1,5 @@
 resource "aws_ecs_cluster" "default" {
   name               = local.name
-  tags = local.tags
+  capacity_providers = local.capacity_providers
+  tags               = local.tags
 }
