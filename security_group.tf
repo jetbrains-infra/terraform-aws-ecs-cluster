@@ -1,6 +1,8 @@
 resource "aws_security_group" "ecs_nodes" {
   name   = "ECS nodes for ${local.name}"
   vpc_id = local.vpc_id
+  tags   = local.tags
+}
 
   ingress {
     from_port   = 0
