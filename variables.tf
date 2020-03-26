@@ -18,11 +18,16 @@ variable "capacity_providers" {
   type        = list(string)
   default     = ["FARGATE", "FARGATE_SPOT"]
 }
+variable "default_capacity_provider" {
+  description = "The short name of the default capacity provider."
+  default     = "FARGATE"
+}
 
 locals {
   vpc_id              = var.vpc_id
   name                = replace(var.cluster_name, " ", "_")
   capacity_providers  = var.capacity_providers
+  capacity_provider   = var.default_capacity_provider
   trusted_cidr_blocks = var.trusted_cidr_blocks
   tags = merge({
     Name   = var.cluster_name,

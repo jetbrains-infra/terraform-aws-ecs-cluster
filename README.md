@@ -23,11 +23,12 @@ module "example_ecs_cluster" {
 Default values:
 ```hcl
 module "example_ecs_cluster" {
-  source              = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
-  cluster_name        = "Example"
-  vpc_id              = var.vpc_id
-  capacity_providers  = ["FARGATE", "FARGATE_SPOT"]
-  trusted_cidr_blocks = []
+  source                    = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
+  cluster_name              = "Example"
+  vpc_id                    = var.vpc_id
+  capacity_providers        = ["FARGATE", "FARGATE_SPOT"]
+  default_capacity_provider = "FARGATE"
+  trusted_cidr_blocks       = []
   tags = {
     "Project" = "example",
     "Version" = "0.1"  
