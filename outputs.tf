@@ -33,3 +33,7 @@ output "security_group_name" {
 output "iam_instance_role_name" {
   value = aws_iam_role.ec2_instance_role.name
 }
+
+output "arn" {
+  value = aws_ecs_cluster.default.arn
+}
