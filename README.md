@@ -10,6 +10,7 @@ module "example_ecs_cluster" {
   project             = "FooBar"
   cluster_name        = "Example"
   vpc_id              = var.vpc_id
+  capacity_providers  = ["FARGATE", aws_ecs_capacity_provider.example.name]
   
   // subnets with ALB and bastion host e.g..
   trusted_cidr_blocks = [
@@ -19,10 +20,26 @@ module "example_ecs_cluster" {
 }
 ```
 
+Default values:
+```hcl
+module "example_ecs_cluster" {
+  source              = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
+  cluster_name        = "Example"
+  vpc_id              = var.vpc_id
+  capacity_providers  = ["FARGATE", "FARGATE_SPOT"]
+  trusted_cidr_blocks = []
+  tags = {
+    "Project" = "example",
+    "Version" = "0.1"  
+  } 
+}
+```
+
 ## Outputs
 
 * `name` - cluster name
 * `id` - cluster id
+* `arn` - cluster ARN
 * `ecs_service_role_name` - ECS service role name
 * `ecs_default_task_role_name` - ECS default task role name
 * `iam_instance_profile_arn` - IAM instance profile ARN

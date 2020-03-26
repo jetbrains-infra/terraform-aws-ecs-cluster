@@ -5,14 +5,13 @@ variable "tags" {
   description = "Tags."
   type        = map(string)
 }
-
 variable "vpc_id" {
   description = "ID of your VPC."
 }
-
 variable "trusted_cidr_blocks" {
-  type    = list(string)
-  default = [""]
+  description = "Trusted subnets e.g. with ALB and bastion host."
+  type        = list(string)
+  default     = [""]
 }
 variable "capacity_providers" {
   description = "Amazon ECS cluster capacity providers determine the infrastructure to use for your tasks."
