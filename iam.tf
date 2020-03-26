@@ -65,3 +65,20 @@ resource "aws_iam_role" "ecs_task_role" {
   name               = "EcsCluster${local.name}DefaultTaskRole"
   tags               = local.tags
 }
+
+resource "aws_iam_role_policy_attachment" "default_task_role" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+data "aws_iam_policy_document" "allow_create_log_groups" {
+  statement {
+    actions   = ["logs:CreateLogGroup"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "allow_create_log_groups" {
+  policy = data.aws_iam_policy_document.allow_create_log_groups.json
+  role   = aws_iam_role.ecs_task_role.id
+}
