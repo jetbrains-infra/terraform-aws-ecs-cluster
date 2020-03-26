@@ -4,22 +4,20 @@ resource "aws_security_group" "ecs_nodes" {
   tags   = local.tags
 }
 
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = var.trusted_cidr_blocks
-  }
+resource "aws_security_group_rule" "ingress" {
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = local.trusted_cidr_blocks
+  security_group_id = aws_security_group.ecs_nodes.id
+  type              = "ingress"
+}
 
-  # allow internet access
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Project = local.project
-  }
+resource "aws_security_group_rule" "egress" {
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.ecs_nodes.id
+  type              = "egress"
 }
