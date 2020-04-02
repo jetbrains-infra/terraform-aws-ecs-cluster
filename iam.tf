@@ -16,9 +16,14 @@ resource "aws_iam_role" "ec2_instance_role" {
   tags               = local.tags
 }
 
-resource "aws_iam_role_policy_attachment" "instance_role" {
+resource "aws_iam_role_policy_attachment" "ecs_instance_role" {
   role       = aws_iam_role.ec2_instance_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role"
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_core_role" {
+  role       = aws_iam_role.ec2_instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_instance_profile" "ecs_node" {
