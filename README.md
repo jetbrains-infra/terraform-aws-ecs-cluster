@@ -1,38 +1,70 @@
 ## About
 
-Terraform module to run ECS cluster. 
+Terraform module to run ECS cluster, with ASG + Launch Template + Scaling policies via capacity provider.
+See details in the corresponding AWS blog post [Amazon ECS Cluster Auto Scaling is Now Generally Available](https://aws.amazon.com/ru/blogs/aws/aws-ecs-cluster-auto-scaling-is-now-generally-available/).
+
+Features:
+* ECS cluster manages ASG capacity automatically.
+* ASG with optional spot instances support.
+* It's possible to specify various instance types for your cluster.
+* EC2 instance profile with SSM policy - you can connect to the instances using the Session Manager.
+* Default ECS task role allows creating a log group.
+* Default security group for ECS nodes allow inbound connections from configurable list of network CIDRs.
+* It's possible to specify additional security groups for ECS nodes.
+* Latest ECS Optimized AMI.
 
 ## Usage
 
 ```hcl
 module "example_ecs_cluster" {
   source              = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
-  project             = "FooBar"
-  cluster_name        = "Example"
-  vpc_id              = var.vpc_id
-  capacity_providers  = ["FARGATE", aws_ecs_capacity_provider.example.name]
-  
+  cluster_name        = "FooBar"
+  spot                = true
+  instance_types = {
+    "t3a.large"  = 1
+    "t3a.xlarge" = 2
+  }
+  target_capacity = 100
+
   // subnets with ALB and bastion host e.g..
   trusted_cidr_blocks = [
     aws_subnet.public_subnet_1.cidr_block,
     aws_subnet.public_subnet_2.cidr_block
   ]
+  
+  subnets_ids         = [
+    aws_subnet.private_subnet_1.id,
+    aws_subnet.private_subnet_2.id
+  ]
+
+  tags = {
+    Stack = "Dev"
+  }
 }
 ```
 
 Default values:
 ```hcl
 module "example_ecs_cluster" {
-  source                    = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
-  cluster_name              = "Example"
-  vpc_id                    = var.vpc_id
-  capacity_providers        = ["FARGATE", "FARGATE_SPOT"]
-  default_capacity_provider = "FARGATE"
-  trusted_cidr_blocks       = []
+  source              = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
+  cluster_name        = "FooBar"
+  spot                = false
+  instance_types = {
+    "t3a.small"  = 2
+  }
+  target_capacity    = 100
+  security_group_ids = []
+  // subnets with ALB and bastion host e.g..
+  trusted_cidr_blocks = []
+  subnets_ids         = [
+    aws_subnet.private_subnet_1.id,
+    aws_subnet.private_subnet_2.id
+  ]
+
   tags = {
-    "Project" = "example",
-    "Version" = "0.1"  
-  } 
+    Name   = "FooBar",
+    Module = "ECS Cluster"
+  }
 }
 ```
 

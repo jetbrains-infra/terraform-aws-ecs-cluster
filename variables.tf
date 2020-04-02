@@ -34,7 +34,7 @@ variable "subnets_ids" {
 }
 variable "target_capacity" {
   description = "The target utilization for the cluster. A number between 1 and 100."
-  default     = "90"
+  default     = "100"
 }
 data "aws_subnet" "default" {
   id = local.subnets_ids[0]
