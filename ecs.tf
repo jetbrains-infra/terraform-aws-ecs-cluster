@@ -10,7 +10,7 @@ resource "aws_ecs_cluster" "default" {
 }
 
 resource "aws_ecs_capacity_provider" "asg" {
-  name = local.name
+  name = aws_autoscaling_group.ecs_nodes.name
 
   auto_scaling_group_provider {
     auto_scaling_group_arn         = aws_autoscaling_group.ecs_nodes.arn
