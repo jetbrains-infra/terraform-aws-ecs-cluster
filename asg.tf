@@ -1,4 +1,5 @@
 resource "aws_autoscaling_group" "ecs_nodes" {
+  name_prefix           = "ECS_NODES_"
   max_size              = 100
   min_size              = 0
   vpc_zone_identifier   = local.subnets_ids
@@ -22,6 +23,10 @@ resource "aws_autoscaling_group" "ecs_nodes" {
         }
       }
     }
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
 
