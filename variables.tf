@@ -48,7 +48,7 @@ locals {
   instance_types      = var.instance_types
   sg_ids              = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
   ami_id              = data.aws_ssm_parameter.ecs_ami.value
-  spot                = var.spot == true ? 100 : 0
+  spot                = var.spot == true ? 0 : 100
   target_capacity     = var.target_capacity
 
   tags = merge({
