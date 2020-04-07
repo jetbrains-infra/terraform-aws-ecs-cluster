@@ -28,5 +28,10 @@ resource "aws_autoscaling_group" "ecs_nodes" {
   lifecycle {
     create_before_destroy = true
   }
+
+  tags = merge({
+    key                 = "AmazonECSManaged",
+    propagate_at_launch = true
+  }, local.tags)
 }
 
