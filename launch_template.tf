@@ -11,6 +11,7 @@ resource "aws_launch_template" "node" {
   user_data = base64encode(<<EOT
 #!/bin/bash
 echo ECS_CLUSTER="${local.name}" >> /etc/ecs/ecs.config
+echo ECS_ENABLE_CONTAINER_METADATA=true >> /etc/ecs/ecs.config
 
 EOT
 )
