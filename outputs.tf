@@ -45,3 +45,7 @@ output "iam_instance_role_name" {
 output "arn" {
   value = aws_ecs_cluster.default.arn
 }
+
+output "capacity_provider_name" {
+  value = aws_ecs_capacity_provider.asg.name
+}
