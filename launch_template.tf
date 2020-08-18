@@ -12,6 +12,7 @@ resource "aws_launch_template" "node" {
 #!/bin/bash
 echo ECS_CLUSTER="${local.name}" >> /etc/ecs/ecs.config
 echo ECS_ENABLE_CONTAINER_METADATA=true >> /etc/ecs/ecs.config
+echo ECS_ENABLE_SPOT_INSTANCE_DRAINING=${tostring(var.spot)} >> /etc/ecs/ecs.config
 
 EOT
 )
