@@ -3,7 +3,7 @@ resource "aws_autoscaling_group" "ecs_nodes" {
   max_size              = 100
   min_size              = 0
   vpc_zone_identifier   = local.subnets_ids
-  protect_from_scale_in = true
+  protect_from_scale_in = local.protect_from_scale_in
 
   mixed_instances_policy {
     instances_distribution {

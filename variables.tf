@@ -17,6 +17,10 @@ variable "instance_types" {
     "t3a.small" = 2
   }
 }
+variable "protect_from_scale_in" {
+  description = "The autoscaling group will not select instances with this setting for termination during scale in events."
+  default     = true
+}
 data "aws_ssm_parameter" "ecs_ami" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
 }
@@ -41,15 +45,16 @@ data "aws_subnet" "default" {
 }
 
 locals {
-  vpc_id              = data.aws_subnet.default.vpc_id
-  subnets_ids         = var.subnets_ids
-  name                = replace(var.cluster_name, " ", "_")
-  trusted_cidr_blocks = var.trusted_cidr_blocks
-  instance_types      = var.instance_types
-  sg_ids              = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
-  ami_id              = data.aws_ssm_parameter.ecs_ami.value
-  spot                = var.spot == true ? 0 : 100
-  target_capacity     = var.target_capacity
+  vpc_id                = data.aws_subnet.default.vpc_id
+  subnets_ids           = var.subnets_ids
+  name                  = replace(var.cluster_name, " ", "_")
+  trusted_cidr_blocks   = var.trusted_cidr_blocks
+  instance_types        = var.instance_types
+  sg_ids                = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
+  ami_id                = data.aws_ssm_parameter.ecs_ami.value
+  spot                  = var.spot == true ? 0 : 100
+  target_capacity       = var.target_capacity
+  protect_from_scale_in = var.protect_from_scale_in
 
   tags = merge({
     Name   = var.cluster_name,
