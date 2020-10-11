@@ -14,7 +14,7 @@ resource "aws_ecs_capacity_provider" "asg" {
 
   auto_scaling_group_provider {
     auto_scaling_group_arn         = aws_autoscaling_group.ecs_nodes.arn
-    managed_termination_protection = "ENABLED"
+    managed_termination_protection = local.protect_from_scale_in ? "ENABLED" : "DISABLED"
 
     managed_scaling {
       maximum_scaling_step_size = 10
