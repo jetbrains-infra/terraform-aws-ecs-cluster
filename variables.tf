@@ -40,6 +40,10 @@ variable "target_capacity" {
   description = "The target utilization for the cluster. A number between 1 and 100."
   default     = "100"
 }
+variable "user_data" {
+  description = "A shell script will be executed at once at EC2 instance start."
+  default     = ""
+}
 data "aws_subnet" "default" {
   id = local.subnets_ids[0]
 }
@@ -55,6 +59,7 @@ locals {
   spot                  = var.spot == true ? 0 : 100
   target_capacity       = var.target_capacity
   protect_from_scale_in = var.protect_from_scale_in
+  user_data             = var.user_data == "" ? [] : [var.user_data]
 
   tags = merge({
     Name   = var.cluster_name,
