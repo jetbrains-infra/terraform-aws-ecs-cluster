@@ -29,6 +29,7 @@ resource "aws_launch_template" "node" {
   vpc_security_group_ids = local.sg_ids
   user_data              = data.template_cloudinit_config.config.rendered
   tags                   = local.tags
+  update_default_version = true
 
   iam_instance_profile {
     name = aws_iam_instance_profile.ecs_node.name
