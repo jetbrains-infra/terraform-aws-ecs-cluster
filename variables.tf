@@ -1,10 +1,6 @@
 variable "cluster_name" {
   description = "Cluster name."
 }
-variable "tags" {
-  description = "Tags."
-  type        = map(string)
-}
 variable "trusted_cidr_blocks" {
   description = "Trusted subnets e.g. with ALB and bastion host."
   type        = list(string)
@@ -61,8 +57,8 @@ locals {
   protect_from_scale_in = var.protect_from_scale_in
   user_data             = var.user_data == "" ? [] : [var.user_data]
 
-  tags = merge({
+  tags = {
     Name   = var.cluster_name,
     Module = "ECS Cluster"
-  }, var.tags)
+  }
 }

@@ -36,10 +36,6 @@ module "example_ecs_cluster" {
     aws_subnet.private_subnet_1.id,
     aws_subnet.private_subnet_2.id
   ]
-
-  tags = {
-    Stack = "Dev"
-  }
 }
 ```
 
@@ -60,11 +56,6 @@ module "example_ecs_cluster" {
     aws_subnet.private_subnet_1.id,
     aws_subnet.private_subnet_2.id
   ]
-
-  tags = {
-    Name   = "FooBar",
-    Module = "ECS Cluster"
-  }
 }
 ```
 
