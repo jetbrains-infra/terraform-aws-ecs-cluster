@@ -40,6 +40,11 @@ variable "user_data" {
   description = "A shell script will be executed at once at EC2 instance start."
   default     = ""
 }
+variable "ebs_disks" {
+  description = "A list of additional EBS disks."
+  type        = map(string)
+  default     = {}
+}
 data "aws_subnet" "default" {
   id = local.subnets_ids[0]
 }
@@ -56,6 +61,7 @@ locals {
   target_capacity       = var.target_capacity
   protect_from_scale_in = var.protect_from_scale_in
   user_data             = var.user_data == "" ? [] : [var.user_data]
+  ebs_disks             = var.ebs_disks
 
   tags = {
     Name   = var.cluster_name,

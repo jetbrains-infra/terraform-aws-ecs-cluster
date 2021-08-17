@@ -12,6 +12,7 @@ Features:
 * Default security group for ECS nodes allow inbound connections from configurable list of network CIDRs.
 * It's possible to specify additional security groups for ECS nodes.
 * Latest ECS Optimized AMI.
+* Additional EBS disks.
 
 ## Usage
 
@@ -31,7 +32,10 @@ module "example_ecs_cluster" {
     aws_subnet.public_subnet_1.cidr_block,
     aws_subnet.public_subnet_2.cidr_block
   ]
-  
+
+  ebs_disks = {
+    "/dev/sda" = 100
+  }
   subnets_ids         = [
     aws_subnet.private_subnet_1.id,
     aws_subnet.private_subnet_2.id

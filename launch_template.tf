@@ -35,6 +35,17 @@ resource "aws_launch_template" "node" {
     name = aws_iam_instance_profile.ecs_node.name
   }
 
+  dynamic "block_device_mappings" {
+    for_each = local.ebs_disks
+    content {
+      device_name = block_device_mappings.key
+
+      ebs {
+        volume_size = block_device_mappings.value
+      }
+    }
+  }
+
   tag_specifications {
     resource_type = "instance"
     tags          = local.tags
