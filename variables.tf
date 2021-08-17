@@ -31,6 +31,7 @@ variable "security_group_ids" {
 }
 variable "subnets_ids" {
   description = "IDs of subnets. Use subnets from various availability zones to make the cluster more reliable."
+  type        = list(string)
 }
 variable "target_capacity" {
   description = "The target utilization for the cluster. A number between 1 and 100."
