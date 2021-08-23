@@ -49,20 +49,28 @@ variable "ebs_disks" {
 data "aws_subnet" "default" {
   id = local.subnets_ids[0]
 }
+variable "on_demand_base_capacity" {
+  description = "The minimum number of on-demand EC2 instances"
+  default     = 0
+}
+
+
 
 locals {
-  vpc_id                = data.aws_subnet.default.vpc_id
-  subnets_ids           = var.subnets_ids
-  name                  = replace(var.cluster_name, " ", "_")
-  trusted_cidr_blocks   = var.trusted_cidr_blocks
-  instance_types        = var.instance_types
-  sg_ids                = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
-  ami_id                = data.aws_ssm_parameter.ecs_ami.value
-  spot                  = var.spot == true ? 0 : 100
-  target_capacity       = var.target_capacity
-  protect_from_scale_in = var.protect_from_scale_in
-  user_data             = var.user_data == "" ? [] : [var.user_data]
-  ebs_disks             = var.ebs_disks
+  vpc_id                  = data.aws_subnet.default.vpc_id
+  subnets_ids             = var.subnets_ids
+  name                    = replace(var.cluster_name, " ", "_")
+  trusted_cidr_blocks     = var.trusted_cidr_blocks
+  instance_types          = var.instance_types
+  sg_ids                  = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
+  ami_id                  = data.aws_ssm_parameter.ecs_ami.value
+  spot                    = var.spot == true ? 0 : 100
+  target_capacity         = var.target_capacity
+  protect_from_scale_in   = var.protect_from_scale_in
+  user_data               = var.user_data == "" ? [] : [var.user_data]
+  ebs_disks               = var.ebs_disks
+  on_demand_base_capacity = var.on_demand_base_capacity
+
 
   tags = {
     Name   = var.cluster_name,
