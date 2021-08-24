@@ -55,7 +55,6 @@ variable "on_demand_base_capacity" {
 }
 
 
-
 locals {
   vpc_id                  = data.aws_subnet.default.vpc_id
   subnets_ids             = var.subnets_ids
@@ -70,7 +69,6 @@ locals {
   user_data               = var.user_data == "" ? [] : [var.user_data]
   ebs_disks               = var.ebs_disks
   on_demand_base_capacity = var.on_demand_base_capacity
-
 
   tags = {
     Name   = var.cluster_name,
