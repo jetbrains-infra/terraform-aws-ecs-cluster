@@ -7,6 +7,7 @@ resource "aws_autoscaling_group" "ecs_nodes" {
 
   mixed_instances_policy {
     instances_distribution {
+      on_demand_base_capacity                  = local.on_demand_base_capacity
       on_demand_percentage_above_base_capacity = local.spot
     }
     launch_template {
