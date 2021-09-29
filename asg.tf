@@ -26,6 +26,20 @@ resource "aws_autoscaling_group" "ecs_nodes" {
     }
   }
 
+  dynamic "initial_lifecycle_hook" {
+    for_each = local.lifecycle_hooks
+    iterator = hook
+    content {
+      name                    = hook.value.name
+      lifecycle_transition    = hook.value.lifecycle_transition
+      default_result          = hook.value.default_result
+      heartbeat_timeout       = hook.value.heartbeat_timeout
+      role_arn                = hook.value.role_arn
+      notification_target_arn = hook.value.notification_target_arn
+      notification_metadata   = hook.value.notification_metadata
+    }
+  }
+
   lifecycle {
     create_before_destroy = true
   }
