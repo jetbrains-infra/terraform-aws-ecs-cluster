@@ -53,7 +53,19 @@ variable "on_demand_base_capacity" {
   description = "The minimum number of on-demand EC2 instances"
   default     = 0
 }
-
+variable "lifecycle_hooks" {
+  description = "A list of maps containing the name,lifecycle_transition,default_result,heartbeat_timeout,role_arn,notification_target_arn keys"
+  type = list(object({
+    name                    = string
+    lifecycle_transition    = string
+    default_result          = string
+    heartbeat_timeout       = number
+    role_arn                = string
+    notification_target_arn = string
+    notification_metadata   = string
+  }))
+  default = []
+}
 
 locals {
   vpc_id                  = data.aws_subnet.default.vpc_id
@@ -64,6 +76,7 @@ locals {
   sg_ids                  = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
   ami_id                  = data.aws_ssm_parameter.ecs_ami.value
   spot                    = var.spot == true ? 0 : 100
+  lifecycle_hooks         = var.lifecycle_hooks
   target_capacity         = var.target_capacity
   protect_from_scale_in   = var.protect_from_scale_in
   user_data               = var.user_data == "" ? [] : [var.user_data]
