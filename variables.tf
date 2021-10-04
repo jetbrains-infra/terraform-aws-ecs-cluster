@@ -20,6 +20,9 @@ variable "protect_from_scale_in" {
 data "aws_ssm_parameter" "ecs_ami" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
 }
+data "aws_ssm_parameter" "ecs_ami_arm64" {
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/arm64/recommended/image_id"
+}
 variable "spot" {
   description = "Choose should we use spot instances or on-demand to poulate ECS cluster."
   type        = bool
@@ -66,6 +69,11 @@ variable "lifecycle_hooks" {
   }))
   default = []
 }
+variable "arm64" {
+  description = "ECS node architecture"
+  default     = false
+  type        = bool
+}
 
 locals {
   vpc_id                  = data.aws_subnet.default.vpc_id
@@ -74,7 +82,7 @@ locals {
   trusted_cidr_blocks     = var.trusted_cidr_blocks
   instance_types          = var.instance_types
   sg_ids                  = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
-  ami_id                  = data.aws_ssm_parameter.ecs_ami.value
+  ami_id                  = var.arm64 ? data.aws_ssm_parameter.ecs_ami_arm64.value : data.aws_ssm_parameter.ecs_ami.value
   spot                    = var.spot == true ? 0 : 100
   lifecycle_hooks         = var.lifecycle_hooks
   target_capacity         = var.target_capacity

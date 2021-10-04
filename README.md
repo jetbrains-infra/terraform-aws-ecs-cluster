@@ -11,8 +11,9 @@ Features:
 * Default ECS task role allows creating a log group.
 * Default security group for ECS nodes allow inbound connections from configurable list of network CIDRs.
 * It's possible to specify additional security groups for ECS nodes.
-* Latest ECS Optimized AMI.
+* Latest ECS Optimized AMI with `amd64` or `arm64` architectures.
 * Additional EBS disks.
+* ASG lifecycle hooks.
 
 ## Usage
 
@@ -21,10 +22,13 @@ module "example_ecs_cluster" {
   source              = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
   cluster_name        = "FooBar"
   spot                = true
+  arm64               = true
+  
   instance_types = {
     "t3a.large"  = 1
     "t3a.xlarge" = 2
   }
+  
   target_capacity = 100
 
   // subnets with ALB and bastion host e.g..
@@ -36,9 +40,26 @@ module "example_ecs_cluster" {
   ebs_disks = {
     "/dev/sda" = 100
   }
-  subnets_ids         = [
+  
+  subnets_ids = [
     aws_subnet.private_subnet_1.id,
     aws_subnet.private_subnet_2.id
+  ]
+  
+  lifecycle_hooks = [
+    {
+      name                    = "Example"
+      lifecycle_transition    = "autoscaling:EC2_INSTANCE_LAUNCHING"
+      default_result          = "CONTINUE"
+      heartbeat_timeout       = 2000
+      role_arn                = aws_iam_role.example.arn
+      notification_target_arn = "arn:aws:sqs:us-east-1:444455556666:queue1"
+      notification_metadata   = <<EOF
+{
+  "foo": "bar"
+}
+EOF
+    }
   ]
 }
 ```
@@ -49,13 +70,18 @@ module "example_ecs_cluster" {
   source              = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
   cluster_name        = "FooBar"
   spot                = false
+  arm64               = false
+  
   instance_types = {
     "t3a.small"  = 2
   }
-  target_capacity    = 100
-  security_group_ids = []
+  
+  target_capacity     = 100
+  security_group_ids  = []
   // subnets with ALB and bastion host e.g..
   trusted_cidr_blocks = []
+  lifecycle_hooks     = []
+  
   subnets_ids         = [
     aws_subnet.private_subnet_1.id,
     aws_subnet.private_subnet_2.id
@@ -75,3 +101,4 @@ module "example_ecs_cluster" {
 * `iam_instance_role_name` - IAM instance role name
 * `security_group_id` - security group id
 * `security_group_name` - security group name
+* `capacity_provider_name` - capacity provider name (the same name for ASG)
