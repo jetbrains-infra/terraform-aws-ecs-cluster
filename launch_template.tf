@@ -42,6 +42,7 @@ resource "aws_launch_template" "node" {
 
       ebs {
         volume_size = block_device_mappings.value
+        volume_type = "gp3"
       }
     }
   }
