@@ -44,6 +44,7 @@ variable "user_data" {
   description = "A shell script will be executed at once at EC2 instance start."
   default     = ""
 }
+//noinspection TFIncorrectVariableType
 variable "ebs_disks" {
   description = "A list of additional EBS disks."
   type        = map(string)

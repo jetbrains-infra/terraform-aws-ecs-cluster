@@ -29,6 +29,7 @@ resource "aws_autoscaling_group" "ecs_nodes" {
   dynamic "initial_lifecycle_hook" {
     for_each = local.lifecycle_hooks
     iterator = hook
+    //noinspection HILUnresolvedReference
     content {
       name                    = hook.value.name
       lifecycle_transition    = hook.value.lifecycle_transition
