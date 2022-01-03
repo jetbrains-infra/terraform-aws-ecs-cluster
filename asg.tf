@@ -1,7 +1,7 @@
 resource "aws_autoscaling_group" "ecs_nodes" {
   name_prefix           = "CLUSTER_NODES_"
-  max_size              = 100
-  min_size              = 0
+  max_size              = local.asg_max_size
+  min_size              = local.asg_min_size
   vpc_zone_identifier   = local.subnets_ids
   protect_from_scale_in = local.protect_from_scale_in
 

@@ -17,6 +17,14 @@ variable "protect_from_scale_in" {
   description = "The autoscaling group will not select instances with this setting for termination during scale in events."
   default     = true
 }
+variable "asg_min_size" {
+  description = "The minimum size the auto scaling group (measured in e2 instances)."
+  default     = 0
+}
+variable "asg_max_size" {
+  description = "The maximum size the auto scaling group (measured in e2 instances)."
+  default     = 100
+}
 data "aws_ssm_parameter" "ecs_ami" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
 }
@@ -76,20 +84,22 @@ variable "arm64" {
 }
 
 locals {
-  vpc_id                  = data.aws_subnet.default.vpc_id
-  subnets_ids             = var.subnets_ids
-  name                    = replace(var.cluster_name, " ", "_")
-  trusted_cidr_blocks     = var.trusted_cidr_blocks
-  instance_types          = var.instance_types
-  sg_ids                  = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
   ami_id                  = var.arm64 ? data.aws_ssm_parameter.ecs_ami_arm64.value : data.aws_ssm_parameter.ecs_ami.value
-  spot                    = var.spot == true ? 0 : 100
-  lifecycle_hooks         = var.lifecycle_hooks
-  target_capacity         = var.target_capacity
-  protect_from_scale_in   = var.protect_from_scale_in
-  user_data               = var.user_data == "" ? [] : [var.user_data]
+  asg_max_size            = var.asg_max_size
+  asg_min_size            = var.asg_min_size
   ebs_disks               = var.ebs_disks
+  instance_types          = var.instance_types
+  lifecycle_hooks         = var.lifecycle_hooks
+  name                    = replace(var.cluster_name, " ", "_")
   on_demand_base_capacity = var.on_demand_base_capacity
+  protect_from_scale_in   = var.protect_from_scale_in
+  sg_ids                  = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
+  spot                    = var.spot == true ? 0 : 100
+  subnets_ids             = var.subnets_ids
+  target_capacity         = var.target_capacity
+  trusted_cidr_blocks     = var.trusted_cidr_blocks
+  user_data               = var.user_data == "" ? [] : [var.user_data]
+  vpc_id                  = data.aws_subnet.default.vpc_id
 
   tags = {
     Name   = var.cluster_name,
