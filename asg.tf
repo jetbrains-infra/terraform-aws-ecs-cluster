@@ -42,7 +42,7 @@ resource "aws_autoscaling_group" "ecs_nodes" {
 
   lifecycle {
     create_before_destroy = true
-    ignore_changes = [ "desired_capacity" ]
+    ignore_changes = [ desired_capacity ]
   }
 
   tag {
