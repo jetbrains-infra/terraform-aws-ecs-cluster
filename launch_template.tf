@@ -1,4 +1,4 @@
-data "template_cloudinit_config" "config" {
+data "cloudinit_config" "config" {
   gzip          = false
   base64_encode = true
 
@@ -27,7 +27,7 @@ resource "aws_launch_template" "node" {
   image_id               = local.ami_id
   instance_type          = "t3a.small"
   vpc_security_group_ids = local.sg_ids
-  user_data              = data.template_cloudinit_config.config.rendered
+  user_data              = data.cloudinit_config.config.rendered
   tags                   = local.tags
   update_default_version = true
 
