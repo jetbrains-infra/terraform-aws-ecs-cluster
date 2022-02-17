@@ -32,7 +32,7 @@ data "aws_ssm_parameter" "ecs_ami_arm64" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/arm64/recommended/image_id"
 }
 variable "spot" {
-  description = "Choose should we use spot instances or on-demand to poulate ECS cluster."
+  description = "Choose should we use spot instances or on-demand to populate ECS cluster."
   type        = bool
   default     = false
 }
@@ -52,6 +52,7 @@ variable "user_data" {
   description = "A shell script will be executed at once at EC2 instance start."
   default     = ""
 }
+//noinspection TFIncorrectVariableType
 variable "ebs_disks" {
   description = "A list of additional EBS disks."
   type        = map(string)
