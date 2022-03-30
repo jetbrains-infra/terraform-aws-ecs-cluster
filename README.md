@@ -4,6 +4,7 @@ Terraform module to run ECS cluster, with ASG + Launch Template + Scaling polici
 See details in the corresponding AWS blog post [Amazon ECS Cluster Auto Scaling is Now Generally Available](https://aws.amazon.com/ru/blogs/aws/aws-ecs-cluster-auto-scaling-is-now-generally-available/).
 
 Features:
+
 * ECS cluster manages ASG capacity automatically.
 * ASG with optional spot instances support.
 * It's possible to specify various instance types for your cluster.
@@ -23,12 +24,12 @@ module "example_ecs_cluster" {
   cluster_name        = "FooBar"
   spot                = true
   arm64               = true
-  
+
   instance_types = {
     "t3a.large"  = 1
     "t3a.xlarge" = 2
   }
-  
+
   target_capacity = 100
 
   // subnets with ALB and bastion host e.g..
@@ -40,13 +41,14 @@ module "example_ecs_cluster" {
   ebs_disks = {
     "/dev/sda" = 100
   }
-  
+
   subnets_ids = [
     aws_subnet.private_subnet_1.id,
     aws_subnet.private_subnet_2.id
   ]
-  
+
   lifecycle_hooks = [
+
     {
       name                    = "Example"
       lifecycle_transition    = "autoscaling:EC2_INSTANCE_LAUNCHING"
@@ -65,23 +67,24 @@ EOF
 ```
 
 Default values:
+
 ```hcl
 module "example_ecs_cluster" {
   source              = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
   cluster_name        = "FooBar"
   spot                = false
   arm64               = false
-  
+
   instance_types = {
     "t3a.small"  = 2
   }
-  
+
   target_capacity     = 100
   security_group_ids  = []
   // subnets with ALB and bastion host e.g..
   trusted_cidr_blocks = []
   lifecycle_hooks     = []
-  
+
   subnets_ids         = [
     aws_subnet.private_subnet_1.id,
     aws_subnet.private_subnet_2.id

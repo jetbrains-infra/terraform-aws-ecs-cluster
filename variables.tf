@@ -1,11 +1,13 @@
 variable "cluster_name" {
   description = "Cluster name."
 }
+
 variable "trusted_cidr_blocks" {
   description = "Trusted subnets e.g. with ALB and bastion host."
   type        = list(string)
   default     = [""]
 }
+
 variable "instance_types" {
   description = "ECS node instance types. Maps of pairs like `type = weight`. Where weight gives the instance type a proportional weight to other instance types."
   type        = map(any)
@@ -13,57 +15,71 @@ variable "instance_types" {
     "t3a.small" = 2
   }
 }
+
 variable "protect_from_scale_in" {
   description = "The autoscaling group will not select instances with this setting for termination during scale in events."
   default     = true
 }
+
 variable "asg_min_size" {
   description = "The minimum size the auto scaling group (measured in e2 instances)."
   default     = 0
 }
+
 variable "asg_max_size" {
   description = "The maximum size the auto scaling group (measured in e2 instances)."
   default     = 100
 }
+
 data "aws_ssm_parameter" "ecs_ami" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
 }
+
 data "aws_ssm_parameter" "ecs_ami_arm64" {
   name = "/aws/service/ecs/optimized-ami/amazon-linux-2/arm64/recommended/image_id"
 }
+
 variable "spot" {
   description = "Choose should we use spot instances or on-demand to poulate ECS cluster."
   type        = bool
   default     = false
 }
+
 variable "security_group_ids" {
   description = "Additional security group IDs. Default security group would be merged with the provided list."
   default     = []
 }
+
 variable "subnets_ids" {
   description = "IDs of subnets. Use subnets from various availability zones to make the cluster more reliable."
   type        = list(string)
 }
+
 variable "target_capacity" {
   description = "The target utilization for the cluster. A number between 1 and 100."
   default     = "100"
 }
+
 variable "user_data" {
   description = "A shell script will be executed at once at EC2 instance start."
   default     = ""
 }
+
 variable "ebs_disks" {
   description = "A list of additional EBS disks."
   type        = map(string)
   default     = {}
 }
+
 data "aws_subnet" "default" {
   id = local.subnets_ids[0]
 }
+
 variable "on_demand_base_capacity" {
   description = "The minimum number of on-demand EC2 instances"
   default     = 0
 }
+
 variable "lifecycle_hooks" {
   description = "A list of maps containing the name,lifecycle_transition,default_result,heartbeat_timeout,role_arn,notification_target_arn keys"
   type = list(object({
@@ -77,6 +93,7 @@ variable "lifecycle_hooks" {
   }))
   default = []
 }
+
 variable "arm64" {
   description = "ECS node architecture"
   default     = false
