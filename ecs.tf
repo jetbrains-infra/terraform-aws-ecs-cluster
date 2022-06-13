@@ -1,11 +1,17 @@
 resource "aws_ecs_cluster" "default" {
-  name               = local.name
-  capacity_providers = [aws_ecs_capacity_provider.asg.name, "FARGATE", "FARGATE_SPOT"]
-  tags               = local.tags
+  name = local.name
+  tags = local.tags
+}
+
+resource "aws_ecs_cluster_capacity_providers" "example" {
+  cluster_name = aws_ecs_cluster.default.name
+
+  capacity_providers = [aws_ecs_capacity_provider.asg.name]
 
   default_capacity_provider_strategy {
+    base              = 1
+    weight            = 100
     capacity_provider = aws_ecs_capacity_provider.asg.name
-    weight = 1
   }
 }
 
