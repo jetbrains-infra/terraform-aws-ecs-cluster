@@ -3,7 +3,7 @@ variable "cluster_name" {
 }
 
 variable "trusted_cidr_blocks" {
-  description = "Trusted subnets e.g. with ALB and bastion host."
+  description = "List of trusted subnets CIDRs with hosts that should connect to the cluster. E.g., subnets with ALB and bastion hosts."
   type        = list(string)
   default     = [""]
 }
@@ -22,25 +22,17 @@ variable "protect_from_scale_in" {
 }
 
 variable "asg_min_size" {
-  description = "The minimum size the auto scaling group (measured in e2 instances)."
+  description = "The minimum size the auto scaling group (measured in EC2 instances)."
   default     = 0
 }
 
 variable "asg_max_size" {
-  description = "The maximum size the auto scaling group (measured in e2 instances)."
+  description = "The maximum size the auto scaling group (measured in EC2 instances)."
   default     = 100
 }
 
-data "aws_ssm_parameter" "ecs_ami" {
-  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
-}
-
-data "aws_ssm_parameter" "ecs_ami_arm64" {
-  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/arm64/recommended/image_id"
-}
-
 variable "spot" {
-  description = "Choose should we use spot instances or on-demand to poulate ECS cluster."
+  description = "Choose should we use spot instances or on-demand to populate ECS cluster."
   type        = bool
   default     = false
 }
@@ -71,17 +63,13 @@ variable "ebs_disks" {
   default     = {}
 }
 
-data "aws_subnet" "default" {
-  id = local.subnets_ids[0]
-}
-
 variable "on_demand_base_capacity" {
-  description = "The minimum number of on-demand EC2 instances"
+  description = "The minimum number of on-demand EC2 instances."
   default     = 0
 }
 
 variable "lifecycle_hooks" {
-  description = "A list of maps containing the name,lifecycle_transition,default_result,heartbeat_timeout,role_arn,notification_target_arn keys"
+  description = "A list of lifecycle hook actions. See details at https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html."
   type = list(object({
     name                    = string
     lifecycle_transition    = string
@@ -95,9 +83,21 @@ variable "lifecycle_hooks" {
 }
 
 variable "arm64" {
-  description = "ECS node architecture"
-  default     = false
+  description = "ECS node architecture. Default is `amd64`. You can change it to `arm64` by activating this flag. If you do, then you should use corresponding instance types."
   type        = bool
+  default     = false
+}
+
+data "aws_subnet" "default" {
+  id = local.subnets_ids[0]
+}
+
+data "aws_ssm_parameter" "ecs_ami" {
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
+}
+
+data "aws_ssm_parameter" "ecs_ami_arm64" {
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/arm64/recommended/image_id"
 }
 
 locals {
