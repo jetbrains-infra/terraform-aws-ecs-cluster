@@ -215,9 +215,7 @@ Type: `list(string)`
 Default:
 
 ```json
-[
-  ""
-]
+[]
 ```
 
 ### <a name="input_user_data"></a> [user\_data](#input\_user\_data)
