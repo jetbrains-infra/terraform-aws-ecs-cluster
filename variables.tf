@@ -11,7 +11,7 @@ variable "trusted_cidr_blocks" {
 variable "instance_types" {
   description = "ECS node instance types. Maps of pairs like `type = weight`. Where weight gives the instance type a proportional weight to other instance types."
   type        = map(any)
-  default = {
+  default     = {
     "t3a.small" = 2
   }
 }
@@ -70,7 +70,7 @@ variable "on_demand_base_capacity" {
 
 variable "lifecycle_hooks" {
   description = "A list of lifecycle hook actions. See details at https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html."
-  type = list(object({
+  type        = list(object({
     name                    = string
     lifecycle_transition    = string
     default_result          = string
@@ -86,6 +86,11 @@ variable "arm64" {
   description = "ECS node architecture. Default is `amd64`. You can change it to `arm64` by activating this flag. If you do, then you should use corresponding instance types."
   type        = bool
   default     = false
+}
+
+variable "enabled_default_capacity_provider" {
+  type    = bool
+  default = true
 }
 
 data "aws_subnet" "default" {
