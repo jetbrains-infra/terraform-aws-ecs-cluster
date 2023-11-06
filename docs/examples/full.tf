@@ -1,9 +1,10 @@
 module "example_ecs_cluster" {
-  source          = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
-  cluster_name    = "FooBar"
-  spot            = true
-  arm64           = true
-  target_capacity = 100
+  source               = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
+  cluster_name         = "FooBar"
+  spot                 = true
+  arm64                = true
+  target_capacity      = 100
+  nodes_with_public_ip = true
 
   instance_types = {
     "t3a.large"  = 1

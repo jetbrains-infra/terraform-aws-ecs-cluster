@@ -35,15 +35,16 @@ module "example_ecs_cluster" {
 Full example
 ```hcl
 module "example_ecs_cluster" {
-  source          = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
-  cluster_name    = "FooBar"
-  spot            = true
-  arm64           = true
-  target_capacity = 100
+  source               = "github.com/jetbrains-infra/terraform-aws-ecs-cluster?ref=vX.X.X" // see https://github.com/jetbrains-infra/terraform-aws-ecs-cluster/releases
+  cluster_name         = "FooBar"
+  spot                 = true
+  arm64                = true
+  target_capacity      = 100
+  nodes_with_public_ip = true
 
   instance_types = {
-    "t4g.large"  = 1
-    "t4g.xlarge" = 2
+    "t3a.large"  = 1
+    "t3a.xlarge" = 2
   }
 
   // subnets with ALB and bastion host e.g..
@@ -102,7 +103,7 @@ The following input variables are optional (have default values):
 
 ### <a name="input_arm64"></a> [arm64](#input\_arm64)
 
-Description: ECS node architecture.
+Description: ECS node architecture. Default is `amd64`. You can change it to `arm64` by activating this flag. If you do, then you should use corresponding instance types.
 
 Type: `bool`
 
@@ -132,6 +133,14 @@ Type: `map(string)`
 
 Default: `{}`
 
+### <a name="input_enabled_default_capacity_provider"></a> [enabled\_default\_capacity\_provider](#input\_enabled\_default\_capacity\_provider)
+
+Description: n/a
+
+Type: `bool`
+
+Default: `true`
+
 ### <a name="input_instance_types"></a> [instance\_types](#input\_instance\_types)
 
 Description: ECS node instance types. Maps of pairs like `type = weight`. Where weight gives the instance type a proportional weight to other instance types.
@@ -148,7 +157,7 @@ Default:
 
 ### <a name="input_lifecycle_hooks"></a> [lifecycle\_hooks](#input\_lifecycle\_hooks)
 
-Description: A list of maps containing the name,lifecycle\_transition,default\_result,heartbeat\_timeout,role\_arn,notification\_target\_arn keys.
+Description: A list of lifecycle hook actions. See details at https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html.
 
 Type:
 
@@ -165,6 +174,14 @@ list(object({
 ```
 
 Default: `[]`
+
+### <a name="input_nodes_with_public_ip"></a> [nodes\_with\_public\_ip](#input\_nodes\_with\_public\_ip)
+
+Description: Assign public IP addresses to ECS cluster nodes. Useful when an ECS cluster hosted in internet facing networks.
+
+Type: `bool`
+
+Default: `false`
 
 ### <a name="input_on_demand_base_capacity"></a> [on\_demand\_base\_capacity](#input\_on\_demand\_base\_capacity)
 
@@ -299,6 +316,7 @@ The following resources are used by this module:
 - [aws_autoscaling_group.ecs_nodes](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/autoscaling_group) (resource)
 - [aws_ecs_capacity_provider.asg](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_capacity_provider) (resource)
 - [aws_ecs_cluster.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster) (resource)
+- [aws_ecs_cluster_capacity_providers.example](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_cluster_capacity_providers) (resource)
 - [aws_iam_instance_profile.ecs_node](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) (resource)
 - [aws_iam_role.ec2_instance_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) (resource)
 - [aws_iam_role.ecs_service_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) (resource)
