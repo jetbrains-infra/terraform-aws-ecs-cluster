@@ -2,6 +2,11 @@ variable "cluster_name" {
   description = "Cluster name."
 }
 
+variable "nodes_with_public_ip" {
+  description = "Assign public IP addresses to ECS cluster nodes. Useful when an ECS cluster hosted in internet facing networks."
+  default     = false
+}
+
 variable "trusted_cidr_blocks" {
   description = "List of trusted subnets CIDRs with hosts that should connect to the cluster. E.g., subnets with ALB and bastion hosts."
   type        = list(string)
@@ -11,7 +16,7 @@ variable "trusted_cidr_blocks" {
 variable "instance_types" {
   description = "ECS node instance types. Maps of pairs like `type = weight`. Where weight gives the instance type a proportional weight to other instance types."
   type        = map(any)
-  default     = {
+  default = {
     "t3a.small" = 2
   }
 }
@@ -70,7 +75,7 @@ variable "on_demand_base_capacity" {
 
 variable "lifecycle_hooks" {
   description = "A list of lifecycle hook actions. See details at https://docs.aws.amazon.com/autoscaling/ec2/userguide/lifecycle-hooks.html."
-  type        = list(object({
+  type = list(object({
     name                    = string
     lifecycle_transition    = string
     default_result          = string
@@ -116,6 +121,7 @@ locals {
   on_demand_base_capacity = var.on_demand_base_capacity
   protect_from_scale_in   = var.protect_from_scale_in
   sg_ids                  = distinct(concat(var.security_group_ids, [aws_security_group.ecs_nodes.id]))
+  public                  = var.nodes_with_public_ip
   spot                    = var.spot == true ? 0 : 100
   subnets_ids             = var.subnets_ids
   target_capacity         = var.target_capacity

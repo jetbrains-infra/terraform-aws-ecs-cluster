@@ -31,6 +31,11 @@ resource "aws_launch_template" "node" {
   tags                   = local.tags
   update_default_version = true
 
+  network_interfaces {
+    associate_public_ip_address = local.public
+    security_groups             = local.sg_ids
+  }
+
   iam_instance_profile {
     name = aws_iam_instance_profile.ecs_node.name
   }
