@@ -13,6 +13,12 @@ variable "trusted_cidr_blocks" {
   default     = [""]
 }
 
+variable "main_instance_type" {
+  description = "ECS node main instance type. If not specified, first (lexicographically) from `instance_types` will be used"
+  type        = string
+  default     = null
+}
+
 variable "instance_types" {
   description = "ECS node instance types. Maps of pairs like `type = weight`. Where weight gives the instance type a proportional weight to other instance types."
   type        = map(any)
@@ -122,6 +128,7 @@ locals {
   asg_min_size            = var.asg_min_size
   ebs_disks               = var.ebs_disks
   instance_types          = var.instance_types
+  main_instance_type      = var.main_instance_type != null ? var.main_instance_type : keys(var.instance_types)[0]
   lifecycle_hooks         = var.lifecycle_hooks
   name                    = replace(var.cluster_name, " ", "_")
   on_demand_base_capacity = var.on_demand_base_capacity
