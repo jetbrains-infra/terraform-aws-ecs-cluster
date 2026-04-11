@@ -93,6 +93,12 @@ variable "arm64" {
   default     = false
 }
 
+variable "ami_id" {
+  description = "AMI ID for ECS nodes. If not provided, the latest ECS-optimized Amazon Linux 2 AMI will be used (respecting the `arm64` variable)."
+  type        = string
+  default     = null
+}
+
 variable "enabled_default_capacity_provider" {
   type    = bool
   default = true
@@ -111,7 +117,7 @@ data "aws_ssm_parameter" "ecs_ami_arm64" {
 }
 
 locals {
-  ami_id                  = var.arm64 ? data.aws_ssm_parameter.ecs_ami_arm64.value : data.aws_ssm_parameter.ecs_ami.value
+  ami_id                  = var.ami_id != null ? var.ami_id : (var.arm64 ? data.aws_ssm_parameter.ecs_ami_arm64.value : data.aws_ssm_parameter.ecs_ami.value)
   asg_max_size            = var.asg_max_size
   asg_min_size            = var.asg_min_size
   ebs_disks               = var.ebs_disks
