@@ -31,9 +31,12 @@ resource "aws_launch_template" "node" {
   tags                   = local.tags
   update_default_version = true
 
-  network_interfaces {
-    associate_public_ip_address = local.public
-    security_groups             = local.sg_ids
+  dynamic "network_interfaces" {
+    for_each = var.nodes_with_public_ip ? tolist([1]) : tolist([])
+    content {
+      associate_public_ip_address = local.public
+      security_groups             = local.sg_ids
+    }
   }
 
   iam_instance_profile {
