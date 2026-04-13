@@ -25,7 +25,7 @@ EOT
 resource "aws_launch_template" "node" {
   name_prefix            = "ecs_node_"
   image_id               = local.ami_id
-  instance_type          = keys(local.instance_types)[0]
+  instance_type          = local.main_instance_type
   vpc_security_group_ids = local.public ? [] : local.sg_ids
   user_data              = data.cloudinit_config.config.rendered
   tags                   = local.tags

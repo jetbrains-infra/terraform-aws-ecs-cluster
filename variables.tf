@@ -13,6 +13,12 @@ variable "trusted_cidr_blocks" {
   default     = [""]
 }
 
+variable "main_instance_type" {
+  description = "ECS node main instance type. If not specified, first (lexicographically) from `instance_types` will be used"
+  type        = string
+  default     = null
+}
+
 variable "instance_types" {
   description = "ECS node instance types. Maps of pairs like `type = weight`. Where weight gives the instance type a proportional weight to other instance types."
   type        = map(any)
@@ -93,6 +99,12 @@ variable "arm64" {
   default     = false
 }
 
+variable "ami_id" {
+  description = "AMI ID for ECS nodes. If not provided, the latest ECS-optimized Amazon Linux 2023 AMI will be used (respecting the `arm64` variable)."
+  type        = string
+  default     = null
+}
+
 variable "enabled_default_capacity_provider" {
   type    = bool
   default = true
@@ -103,19 +115,20 @@ data "aws_subnet" "default" {
 }
 
 data "aws_ssm_parameter" "ecs_ami" {
-  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/recommended/image_id"
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended/image_id"
 }
 
 data "aws_ssm_parameter" "ecs_ami_arm64" {
-  name = "/aws/service/ecs/optimized-ami/amazon-linux-2/arm64/recommended/image_id"
+  name = "/aws/service/ecs/optimized-ami/amazon-linux-2023/arm64/recommended/image_id"
 }
 
 locals {
-  ami_id                  = var.arm64 ? data.aws_ssm_parameter.ecs_ami_arm64.value : data.aws_ssm_parameter.ecs_ami.value
+  ami_id                  = var.ami_id != null ? var.ami_id : (var.arm64 ? data.aws_ssm_parameter.ecs_ami_arm64.value : data.aws_ssm_parameter.ecs_ami.value)
   asg_max_size            = var.asg_max_size
   asg_min_size            = var.asg_min_size
   ebs_disks               = var.ebs_disks
   instance_types          = var.instance_types
+  main_instance_type      = var.main_instance_type != null ? var.main_instance_type : keys(var.instance_types)[0]
   lifecycle_hooks         = var.lifecycle_hooks
   name                    = replace(var.cluster_name, " ", "_")
   on_demand_base_capacity = var.on_demand_base_capacity
