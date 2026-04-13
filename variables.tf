@@ -10,7 +10,7 @@ variable "nodes_with_public_ip" {
 variable "trusted_cidr_blocks" {
   description = "List of trusted subnets CIDRs with hosts that should connect to the cluster. E.g., subnets with ALB and bastion hosts."
   type        = list(string)
-  default     = [""]
+  default     = []
 }
 
 variable "main_instance_type" {

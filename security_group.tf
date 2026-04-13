@@ -2,7 +2,7 @@ resource "aws_security_group" "ecs_nodes" {
   name   = "ECS nodes for ${local.name}"
   vpc_id = local.vpc_id
   tags   = local.tags
-  
+
   lifecycle {
     ignore_changes = [
       vpc_id,
@@ -11,6 +11,7 @@ resource "aws_security_group" "ecs_nodes" {
 }
 
 resource "aws_security_group_rule" "ingress" {
+  count             = length(local.trusted_cidr_blocks) != 0 ? 1 : 0
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
